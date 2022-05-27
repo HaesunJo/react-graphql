@@ -8,9 +8,9 @@ const GET_MOVIES = gql`
 	allMovies{
 		id
 		medium_cover_image
-		language
+		isLiked @client
 	}
-	}
+}
 `;
 
 const Container = styled.div`
@@ -71,13 +71,12 @@ function Home() {
 			</Header>
 				{(loading && <Loading>Movie Loading...</Loading>)}
 
-				{(!loading && data.allMovies && (
-					<Movies>
-					{data.allMovies.map((m) =>
-						<Movie key={m.id} id={m.id} bg={m.medium_cover_image} />
-					)}
-					</Movies>
-				))}
+				<Movies>
+				{data?.allMovies?.map((movie) =>
+					<Movie key={movie.id} id={movie.id} isLiked={movie.isLiked} bg={movie.medium_cover_image} />
+				)}
+				</Movies>
+
 		</Container>
 	)
 }
