@@ -1,12 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useQuery, gql } from '@apollo/client';
 import styled from "styled-components";
-import Movie from '../components/Movie';
 
 const GET_MOVIES = gql`
-{
-	allMovies{
+query getAllMovies {
+	allMovies {
 		id
+		title
 		medium_cover_image
 		isLiked @client
 	}
@@ -18,18 +19,17 @@ const Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	font-family: Sans-serif
 `;
 
 const Header = styled.header`
 	background-image: linear-gradient(-45deg, #74ebd5, #ACB6E5);
+	width: 100%;
 	height: 45vh;
 	color: white;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
 `;
 
 const Title = styled.h1`
@@ -58,7 +58,25 @@ const Movies = styled.div`
 	top: -50px;
 `;
 
+const PosterContainer = styled.div`
+	height: 300px;
+	width: 100%;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+	border-radius: 7px;
+`;
+
+const Poster = styled.div`
+	height: 100%;
+	width: 100%;
+	border-radius: 3px;
+	background-size: cover;
+	backgound-position: center center;
+	background-image: url(${props=> props.bg});
+`;
+
+
 function Home() {
+
 	const { loading, data } = useQuery(GET_MOVIES);
 	// console.log(loading, data)
 	// if (loading) return "loading movies..."
@@ -72,9 +90,13 @@ function Home() {
 				{(loading && <Loading>Movie Loading...</Loading>)}
 
 				<Movies>
-				{data?.allMovies?.map((movie) =>
-					<Movie key={movie.id} id={movie.id} isLiked={movie.isLiked} bg={movie.medium_cover_image} />
-				)}
+				{data?.allMovies?.map((movie) => (
+					<PosterContainer key={movie.id}>
+						<Link to={`/detail/${movie.id}`}>
+							<Poster bg={movie.medium_cover_image} />
+						</Link>
+					</PosterContainer>
+				))}
 				</Movies>
 
 		</Container>

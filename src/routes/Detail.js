@@ -4,19 +4,18 @@ import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components'
 
 const GET_MOVIE = gql`
-      query getMovie($id: String!){
-        movie(id: $id){
-          id
-          title
-          language
-          rating
-          medium_cover_image
-          background_image
-          description_full
-          isLiked @client
-        }
-      }
-    `;
+  query getMovie($movieId: String!){
+    movie(id: $movieId){
+      id
+      title
+      language
+      rating
+      large_cover_image
+      description_full
+      isLiked @client
+    }
+  }
+`;
 
 
 const Container = styled.div`
@@ -30,38 +29,66 @@ const Container = styled.div`
 `;
 
 const Column = styled.div`
-  margin-left: 10px;
+  margin-left: 40px;
+  width: 60%;
 `;
 
 const Title = styled.h1`
-  font-size: 65px;
+  font-size: 3.5rem;
   margin-bottom: 15px;
 `;
 
 const Info = styled.h4`
-  font-size: 35px;
+  font-size: 2.5rem;
   margin-bottom: 10px;
 `;
 
 const Description = styled.p`
-  font-size: 28px;
-  width: 50%;
+  font-size: 1.5rem;
+  width: 60%;
 `;
 
 const Poster = styled.div`
-  width: 25%;
-  height: 60%;
+  width: 45%;
+  height: 80%;
+  border-radius: 7px;
   background-color: transparent;
+  background-size: cover;
+  background-position: center center;
+  background-image: url(${(props) => props.background});
 `;
 
+const BtnLiked = styled.div`
+padding: 15px 20px;
+width: 320px;
+heigth: 70px;
+color: #ACB6E5;
+font-size: 1.2rem;
+border: none;
+background-color: #ffffff;
+text-align: center;
+text-decoration: none;
+cursor: pointer;
+`
 
 export const Detail = () => {
     const { id } = useParams();
 
-    const { loading, data} = useQuery(GET_MOVIE, { variables: {
-      id, isCachedYet: true
-    } })
+    const { loading, data, client: { cache }} = useQuery(GET_MOVIE, { variables: { movieId: id } })
 
+    console.log(data, loading)
+    
+    const btnLike = () => {
+      cache.writeFragment({
+        id:`Movie:${id}`,
+        fragment: gql `
+          fragment ToggleMovie on Movie {
+            isLiked
+          }
+        `,
+        data: { isLiked: !data.movie.isLiked }
+      })
+    }
     // console.log(loading, data);
 
     // if (loading) return "loading"
@@ -71,13 +98,18 @@ export const Detail = () => {
       <Container>
         <Column>
         
-          <Title>{loading? "loading..." : `${data.movie.title} ${data.movie.isLiked ? "Liked it!" : "Well..meh"}`}</Title>
+          <Title>{loading? "loading..." : `${data.movie.title} `}</Title>
           {/* use Optional chaining to make simple codes */}
-          <Info>{data?.movie?.language} · {data?.movie?.rating}</Info>
+          <Info>{data?.movie?.language} · ⭐️{data?.movie?.rating}</Info>
+            
+          <BtnLiked onClick={btnLike}>
+            {data?.movie?.isLiked ? "You liked it! Click if you unlike it" : "👍 Do you like this movie? click me!"}
+          </BtnLiked>
+
           <Description>{data?.movie?.description_full}</Description>
 
         </Column>
-        <Poster bg={data?.movie?.medium_cover_image}></Poster>
+        <Poster background={data?.movie?.large_cover_image}></Poster>
       </Container>
     )
   }
