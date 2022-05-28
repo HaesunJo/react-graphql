@@ -96,3 +96,23 @@ return (
 )
 
 ```
+
+
+
+
+## Result
+
+### Main page
+
+![main-full](./img/img-main.PNG)
+![main-narrow](./img/img-main02.PNG)
+
+
+### Detail page
+![detail-full](./img/img-detail03.PNG)
+![detail-narrow](./img/img-detail04.PNG)
+
+
+### Like button
+![detail-like](./img/img-detail01.PNG)
+![detail-unlike](./img/img-detail02.PNG)

@@ -49,6 +49,7 @@ const Description = styled.p`
 `;
 
 const Poster = styled.div`
+  margin-right: 40px;
   width: 45%;
   height: 80%;
   border-radius: 7px;
