@@ -61,8 +61,7 @@ return (
 
 
 #### Declartive code
-Hook allows to use declartive code that write code to explain and express what you want
-Working with uesQuery will be like:
+- Hook allows to use declartive code that write code to explain and express what you want
 
 - what can we get from useQuery()?
     - client : ApolloClient<any>
