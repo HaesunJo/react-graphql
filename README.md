@@ -1,6 +1,7 @@
 # React and GraphQL
 
 Build a movie app with React, Apollo and GraphQL
+[API](https://github.com/HaesunJo/study_graphQL)
 
 
 ### set up
